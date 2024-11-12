@@ -57,7 +57,8 @@ export const getSnippetById = asyncHandler(
     if (snippet) {
       res.json(snippet);
     } else {
-      res.status(404).json({ error: `Snippet NOT_FOUND with id: ${id}` });
+      res.status(404).json({ error: "Snippet not found" });
+      return;
     }
   }
 );
