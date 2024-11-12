@@ -1,8 +1,13 @@
 import express, { Express } from "express";
+import snippetRouter from "./routes/snippetRoutes";
 
-const app: Express = express();
-app.use(express.json());
 const port = 3000;
+const app: Express = express();
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+app.use("/api", snippetRouter);
 
 app.get("/", (req, res) => {
   res.send("Hello There!");
