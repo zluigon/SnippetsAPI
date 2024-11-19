@@ -1,10 +1,16 @@
 import { Request, Response } from "express";
 import asyncHandler from "express-async-handler";
 
+import { encrypt, decrypt } from "../utils/encrypt";
+
 import { Snippet } from "../interfaces/snippet";
 import seedData from "../seedData.json";
 
-let snippets: Snippet[] = seedData;
+let snippets: Snippet[] = seedData.map((s) => ({
+	...s,
+	code: encrypt(s.code),
+}));
+
 let nextSnipppetId = seedData.length + 1;
 
 /**
@@ -26,7 +32,7 @@ export const createSnippet = asyncHandler(
 			language,
 			code,
 		};
-		snippets.push(newSnippet);
+		snippets.push({ ...newSnippet, code: encrypt(newSnippet.code) });
 		res.status(201).json(newSnippet);
 	}
 );
@@ -39,9 +45,17 @@ export const createSnippet = asyncHandler(
 export const getSnippets = asyncHandler(async (req: Request, res: Response) => {
 	const { lang } = req.query;
 	if (lang) {
-		res.json(snippets.filter((s) => s.language === lang.toString()));
+		res.json(
+			snippets.filter((s) => s.language === lang.toString())
+
+			// decrypt all matched snippets
+			// .map((s) => ({ ...s, code: decrypt(s.code) }))
+		);
 	} else {
 		res.json(snippets);
+
+		// decrypt all snippets
+		// res.json(snippets.map((s) => ({ ...s, code: decrypt(s.code) })));
 	}
 });
 
@@ -55,7 +69,7 @@ export const getSnippetById = asyncHandler(
 		const id = parseInt(req.params.id, 10);
 		const snippet = snippets.find((s) => s.id === id);
 		if (snippet) {
-			res.json(snippet);
+			res.json({ ...snippet, code: decrypt(snippet.code) });
 		} else {
 			res.status(404).json({ error: "Snippet not found" });
 			return;
