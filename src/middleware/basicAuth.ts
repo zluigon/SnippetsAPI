@@ -22,7 +22,6 @@ const basicAuth = asyncHandler(
 
 		if (!email || !password) {
 			res.status(401).json({ error: "Unauthorized" });
-			return;
 		}
 
 		req.user = { email, password };
