@@ -46,16 +46,17 @@ export const getSnippets = asyncHandler(async (req: Request, res: Response) => {
 	const { lang } = req.query;
 	if (lang) {
 		res.json(
-			snippets.filter((s) => s.language === lang.toString())
+			snippets
+				.filter((s) => s.language === lang.toString())
 
-			// decrypt all matched snippets
-			// .map((s) => ({ ...s, code: decrypt(s.code) }))
+				// decrypt all matched snippets
+				.map((s) => ({ ...s, code: decrypt(s.code) }))
 		);
 	} else {
 		res.json(snippets);
 
 		// decrypt all snippets
-		// res.json(snippets.map((s) => ({ ...s, code: decrypt(s.code) })));
+		res.json(snippets.map((s) => ({ ...s, code: decrypt(s.code) })));
 	}
 });
 
