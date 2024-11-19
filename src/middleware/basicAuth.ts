@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { Request, Response, NextFunction } from "express";
 import asyncHandler from "express-async-handler";
 
 interface AuthenticatedRequest extends Request {
@@ -6,7 +6,7 @@ interface AuthenticatedRequest extends Request {
 }
 
 const basicAuth = asyncHandler(
-	async (req: AuthenticatedRequest, res: Response) => {
+	async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
 		const authHeader = req.headers.authorization;
 
 		if (!authHeader || !authHeader.startsWith("Basic ")) {
@@ -20,12 +20,13 @@ const basicAuth = asyncHandler(
 		);
 		const [email, password] = credentials.split(":");
 
-		if (!email && !password) {
-		} else {
+		if (!email || !password) {
 			res.status(401).json({ error: "Unauthorized" });
+			return;
 		}
 
 		req.user = { email, password };
+		next();
 	}
 );
 
