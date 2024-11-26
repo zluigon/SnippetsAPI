@@ -16,6 +16,7 @@ let nextSnipppetId = seedData.length + 1;
 /**
  * @description Create snippets
  * @route       POST api/snippets
+ * @access      Public
  */
 
 export const createSnippet = asyncHandler(
@@ -40,6 +41,7 @@ export const createSnippet = asyncHandler(
 /**
  * @description Get snippets
  * @route       GET api/snippets
+ * @access      Public
  */
 
 export const getSnippets = asyncHandler(async (req: Request, res: Response) => {
@@ -63,6 +65,7 @@ export const getSnippets = asyncHandler(async (req: Request, res: Response) => {
 /**
  * @description Get snippet by id
  * @route       GET api/snippets/:id
+ * @access      Public
  */
 
 export const getSnippetById = asyncHandler(
